@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         WWW-Mechanize-Cached
-version:      1.26
+version:      1.27_01
 version_from: Cached.pm
 installdirs:  site
 requires:
@@ -12,4 +12,4 @@ requires:
     WWW::Mechanize:                0.70
 
 distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+generated_by: ExtUtils::MakeMaker version 6.21

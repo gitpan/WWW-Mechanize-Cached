@@ -9,92 +9,63 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.26
+Version 1.27_01
 
-    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.3 2004/03/01 06:00:18 andy Exp $
+    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.11 2004/03/11 05:40:27 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.26';
+$VERSION = '1.27_01';
 
 =head1 SYNOPSIS
 
     use WWW::Mechanize::Cached;
 
-    my $cacher = WWW::Mechanize::Cached->new(
-        cache => {
-            class => "Cache::FileCache",
-            args => {
-               ...
-            },
-        },
-    );
-
+    my $cacher = WWW::Mechanize::Cached->new;
     $cacher->get( $url );
 
 =head1 DESCRIPTION
 
-Uses the L<Cache::Cache> hierarchy to implement a caching
-Mech. This lets one perform repeated requests without
-hammering a server impolitely.
+Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
+lets one perform repeated requests without hammering a server impolitely.
 
 =cut
 
 use base qw( WWW::Mechanize );
 use Carp qw( carp croak );
 use Storable qw( freeze thaw );
-use Cache::Cache;
+use Cache::FileCache;
 
-my %default = (
-    cache_class => 'Cache::FileCache',
-    args => {
-        namespace => __PACKAGE__,
-        default_expires_in => "1d",
-    }
-);
 my $cache_key = __PACKAGE__;
 
 =head1 CONSTRUCTOR
 
 =head2 new
 
-Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.
+Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.  Any parms
+passed in get passed to WWW::Mechanize's constructor.
 
-Supports the additional key C<cache> which should be a hashref
-containing any of two optional keys.
-
-=over 4
-
-=item class
-
-Should be the L<Cache::Cache> based module to use. The default is
-L<Cache::FileCache>.
-
-=item args
-
-Should be the arguments to pass to that module's own C<new> constructor.
-Default contents are C<namespace> (set to C<WWW::Mechanize::Cached>) and
-C<default_expires_in> (set to C<1d>).
-
-=back
+This constructor used to take a C<cache> parm, but does no longer.
 
 =cut
 
 sub new {
     my $class = shift;
-    my %args = @_;
-    my %opts = %default;
-    if (exists $args{cache}) {
-        my %new = %{ delete $args{cache} };
-        $opts{cache_class} = delete $new{cache_class} if exists $new{cache_class};
-        %{$opts{args}} = ( %{ $opts{args} }, %new );
-        croak "Bad cache_class name" unless $opts{cache_class} =~ /^[\w:]+$/;
+    my %mech_args = @_;
+
+    if ( delete $mech_args{cache} ) {
+        carp "The cache parm is no longer used in WWW::Mechanize::Cached's constructor";
     }
-    my $self = $class->SUPER::new( %args );
-    eval "use $opts{cache_class}";
-    my $cache = $opts{cache_class}->new( $opts{args} );
-    $self->{$cache_key} = $cache;
+
+    my $self = $class->SUPER::new( %mech_args );
+
+    my $cache_parms = {
+        default_expires_in => "1d",
+        namespace => 'www-mechanize-cached',
+    };
+
+    $self->{$cache_key} = Cache::FileCache->new( $cache_parms );
     return $self;
 }
 
@@ -104,6 +75,8 @@ All methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
 
 =cut
+
+
 
 sub _make_request {
     my $self = shift;
