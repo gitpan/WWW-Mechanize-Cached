@@ -1,0 +1,40 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.37.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It would check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 0d6be8d7eadaaf48cfbe26a2566a2c4884248210 AUTHORS
+SHA1 7a95fc8778fbce1f60d222e0d0d1dbb6c649461f Artistic
+SHA1 531e6b5c470d4726483fd68833391653eace0a92 COPYING
+SHA1 5d78f9420dd4410a95793d61a0014cca29a13cf7 CREDITS
+SHA1 30eb3b37a0b35d4f6cdda8a9b1ee5bca1beff88f ChangeLog
+SHA1 c04a11e54632d5c963c392186de68980fd7b1496 Changes
+SHA1 a490eaa09ce5d52d6ad8a51011f669000faca962 INSTALL
+SHA1 ba69ba57a655612ed8b37241de0763e0bcf95c68 LICENCE
+SHA1 235204871c9703f514335d0dc9ed0eb0163f4969 MANIFEST
+SHA1 35414ae477cd69f40ede783768e209dc73b15f25 MANIFEST.SKIP
+SHA1 ca03b7625a4e01d80b7b4fddfccc7689c84a064b META.yml
+SHA1 592d7b1b938f07f95536c1a1d1ca4d38d06a2521 Makefile.PL
+SHA1 ac82ef0c359679855b22e97db41f1c46a0175852 README
+SHA1 c23f55503a558f11cb95ee0fd64538c05b8ba6b7 lib/WWW/Mechanize/Cached.pm
+SHA1 c41574ca2c239b0c8dd9426018ee41eabb06e437 t/99pod.t
+SHA1 bbdfee58f8846c172af51c5d4e4c21fa2d88c925 t/basic.t
+SHA1 f50167ffb2c0583338f7a13c4679dae6f25f75c2 t/cached.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQE/yzapzL8gm6KQWMgRAt0hAJ9lSZGefG/xTQyRZhY+80K75+r3IgCeNv0p
+MOOUf1tKG7PwokKvxHLLzCY=
+=CJ5H
+-----END PGP SIGNATURE-----
