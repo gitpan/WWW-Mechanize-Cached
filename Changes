@@ -1,6 +1,15 @@
+Revision history for Perl extension WWW::Mechanize::Cached
 
----
-version: 0.01
-date:    1 Dec 2003
-changes:
-    - Initial revision.
+1.24    Sun Jan 18 23:10:40 CST 2004
+
+        NO NEW FUNCTIONALITY.
+
+        On December 29th, 2003, Iain Truskett, the original author of
+        WWW::Mechanize::Cached passed away.  I've taken over maintenance
+        of the module.  If you're interested in carrying on Iain's work,
+        let me know.
+
+
+1.23    December 1, 2003
+        Initial version, released by Iain Truskett.
+

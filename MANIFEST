@@ -1,6 +1,5 @@
 Artistic
 AUTHORS
-ChangeLog
 Changes
 COPYING
 CREDITS
@@ -13,6 +12,7 @@ MANIFEST.SKIP
 META.yml
 README
 SIGNATURE
-t/99pod.t
+t/pod.t
+t/pod-coverage.t
 t/basic.t
 t/cached.t

@@ -1,6 +1,7 @@
-WWW::Mechanize::Cached
+WWW::Mechanize::Cached:
 
-    Cache resposne to be polite
+    A subclass of the WWW::Mechanize web browser class that caches
+    responses.
 
 For installation details, see INSTALL.
 
@@ -8,11 +9,7 @@ For usage, see the doco. Either use perldoc or view it
 on the web at:
     <http://search.cpan.org/dist/WWW-Mechanize-Cached/>
 
-Changes for 0.01 (1 Dec 2003)
-  - Initial release
-
-
 For a complete list of changes, see the Changes file.
 
 
-by Iain Truskett.
+by Iain Truskett, currently maintained by Andy Lester.
