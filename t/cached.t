@@ -11,7 +11,6 @@ my $mech = WWW::Mechanize::Cached->new( autocheck => 1 );
 isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
 my $first  = $mech->get( URL )->content;
-sleep 3;
 my $second = $mech->get( URL )->content;
 sleep 3; # 3 due to Referer header
 my $third  = $mech->get( URL )->content;

@@ -14,5 +14,8 @@ README
 t/00.load.t
 t/pod.t
 t/pod-coverage.t
+t/bad-custom-cache.t
 t/basic.t
 t/cached.t
+t/custom-cache.t
+t/TestCache.pm

@@ -9,14 +9,14 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.27_01
+Version 1.28
 
-    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.11 2004/03/11 05:40:27 andy Exp $
+    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.13 2004/03/14 04:08:40 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.27_01';
+$VERSION = '1.28';
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,6 @@ lets one perform repeated requests without hammering a server impolitely.
 use base qw( WWW::Mechanize );
 use Carp qw( carp croak );
 use Storable qw( freeze thaw );
-use Cache::FileCache;
 
 my $cache_key = __PACKAGE__;
 
@@ -46,7 +45,14 @@ my $cache_key = __PACKAGE__;
 Behaves like, and calls, L<WWW::Mechanize>'s C<new> method.  Any parms
 passed in get passed to WWW::Mechanize's constructor.
 
-This constructor used to take a C<cache> parm, but does no longer.
+You can pass in a C<< cache => $cache_object >> if you want.  The
+I<$cache_object> must have C<get()> and C<set()> methods like the
+C<Cache::Cache> family.
+
+The I<cache> parm used to be a set of parms that described how the
+cache object was to be initialized, but I think it makes more sense
+to have the user initialize the cache however she wants, and then
+pass it in.
 
 =cut
 
@@ -54,18 +60,28 @@ sub new {
     my $class = shift;
     my %mech_args = @_;
 
-    if ( delete $mech_args{cache} ) {
-        carp "The cache parm is no longer used in WWW::Mechanize::Cached's constructor";
+    my $cache = delete $mech_args{cache};
+    if ( $cache ) {
+        my $ok = (ref($cache) ne "HASH") && $cache->can("get") && $cache->can("set");
+        if ( !$ok ) {
+            carp "The cache parm must be an initialized cache object";
+            $cache = undef;
+        }
     }
 
     my $self = $class->SUPER::new( %mech_args );
 
-    my $cache_parms = {
-        default_expires_in => "1d",
-        namespace => 'www-mechanize-cached',
-    };
+    if ( !$cache ) {
+        require Cache::FileCache;
+        my $cache_parms = {
+            default_expires_in => "1d",
+            namespace => 'www-mechanize-cached',
+        };
+        $cache = Cache::FileCache->new( $cache_parms );
+    }
 
-    $self->{$cache_key} = Cache::FileCache->new( $cache_parms );
+    $self->{$cache_key} = $cache;
+
     return $self;
 }
 
@@ -75,8 +91,6 @@ All methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
 
 =cut
-
-
 
 sub _make_request {
     my $self = shift;

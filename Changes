@@ -1,17 +1,26 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
-1.27_01
+1.28    Sat Mar 13 22:05:26 CST 2004
+
         [THINGS THAT WILL BREAK YOUR CODE]
-        * The constructor can no longer take a C<cache> argument to
-          specify the parms for the cache.  I'm betting that the
-          functionality where W::M::C instantiates the cache for you
-          isn't actually used.  If I break your code, please let me know.
+        * The C<cache> parm to the constructor is no longer a set
+          of parms to specify how the cache will be initialized.  It
+          must now be a fully-initialized cache object, probably in
+          the Cache::Cache hierarchy.
 
         * Existing caches will not work, because I changed the
           directory that they get written to.  It used to go into
           /tmp/FileCache/WWW::Mechanize::Cached, but now will go into
           /tmp/FileCache/www-mechanize-cached.  This is so the Windows
           folks can use the module, too.
+
+          However, if you want to create your own cache object that
+          writes to /tmp/FileCache/WWW::Mechanize::Cached, for
+          compatibility, you can create it and pass it in.
+
+        [ENHANCEMENTS]
+        * You can now specify your own Cache::Cache object to pass
+          into the constructor.
 
 1.26    Sun Feb 29 23:59:48 CST 2004
 
