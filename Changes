@@ -1,5 +1,16 @@
 Revision history for Perl extension WWW::Mechanize::Cached
 
+1.26    Sun Feb 29 23:59:48 CST 2004
+
+        [FIXES]
+        * Removed a duplicate $key.  Cleaned up some of the internal code,
+          and made the variable names more explicit.
+
+        * Added an autocheck=>1 to the t/cached.t test.  Also hits
+          time.gov instead of Iain's now-gone website.
+
+        * Removed the SIGNATURE, which I don't intend to maintain.
+
 1.24    Sun Jan 18 23:10:40 CST 2004
 
         NO NEW FUNCTIONALITY.

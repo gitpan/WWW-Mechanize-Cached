@@ -9,14 +9,14 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.24
+Version 1.26
 
-    $Header: /home/cvs/www-mechanize-cached/lib/WWW/Mechanize/Cached.pm,v 1.5 2004/01/19 05:00:41 andy Exp $
+    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.3 2004/03/01 06:00:18 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.24';
+$VERSION = '1.26';
 
 =head1 SYNOPSIS
 
@@ -47,13 +47,13 @@ use Storable qw( freeze thaw );
 use Cache::Cache;
 
 my %default = (
-    class => 'Cache::FileCache',
+    cache_class => 'Cache::FileCache',
     args => {
         namespace => __PACKAGE__,
         default_expires_in => "1d",
     }
 );
-my $key = __PACKAGE__;
+my $cache_key = __PACKAGE__;
 
 =head1 CONSTRUCTOR
 
@@ -87,35 +87,36 @@ sub new {
     my %opts = %default;
     if (exists $args{cache}) {
         my %new = %{ delete $args{cache} };
-        $opts{class} = delete $new{class} if exists $new{class};
+        $opts{cache_class} = delete $new{cache_class} if exists $new{cache_class};
         %{$opts{args}} = ( %{ $opts{args} }, %new );
-        croak "Bad class name" unless $opts{class} =~ /^[\w:]+$/;
+        croak "Bad cache_class name" unless $opts{cache_class} =~ /^[\w:]+$/;
     }
     my $self = $class->SUPER::new( %args );
-    eval "use $opts{class}";
-    my $c = $opts{class}->new( $opts{args} );
-    $self->{$key} = $c;
+    eval "use $opts{cache_class}";
+    my $cache = $opts{cache_class}->new( $opts{args} );
+    $self->{$cache_key} = $cache;
     return $self;
 }
 
 =head1 METHODS
 
-All methods are provided by L<WWW::Mechanize>. See taht module's
+All methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
 
 =cut
 
 sub _make_request {
     my $self = shift;
-    my $c = $self->{$key};
     my $request = shift;
-    my $key = $request->as_string;
-    my $v = $c->get( $key );
+
+    my $req = $request->as_string;
+    my $cache = $self->{$cache_key};
+    my $v = $cache->get( $req );
     if ($v) {
         $v = thaw $v;
     } else {
         $v = $self->SUPER::_make_request( $request, @_ );
-        $c->set( $key, freeze($v) );
+        $cache->set( $req, freeze($v) );
     };
 
     # An odd line to need.
@@ -143,7 +144,6 @@ adds a C<Referer> header.
 Support for this module is provided via the CPAN RT system:
 
     http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW-Mechanize-Cached
-    ( shorter URL: http://xrl.us/63i )
 
     bug-www-mechanize-cached@rt.cpan.org
 
@@ -174,4 +174,4 @@ L<perl>, L<WWW::Mechanize>.
 
 =cut
 
-"We'll miss you, Spoon";
+"We miss you, Spoon";

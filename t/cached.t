@@ -2,25 +2,19 @@
 use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 3;
-use vars qw( $class );
+use constant URL => 'http://www.time.gov/timezone.cgi?Central/d/-6';
 
 BEGIN {
-    $class = 'WWW::Mechanize::Cached';
-    use_ok $class;
+    use_ok( 'WWW::Mechanize::Cached' );
 }
 
-# ------------------------------------------------------------------------
+my $mech = WWW::Mechanize::Cached->new( autocheck => 1 );
+isa_ok( $mech, 'WWW::Mechanize::Cached' );
 
-{
-    my $c = $class->new;
-    isa_ok( $c => $class );
+my $first  = $mech->get( URL )->content;
+sleep 3;
+my $second = $mech->get( URL )->content;
+sleep 3; # 3 due to Referer header
+my $third  = $mech->get( URL )->content;
 
-    my $first  = $c->get( 'http://dellah.org/time.cgi' )->content;
-    sleep 3;
-    my $second = $c->get( 'http://dellah.org/time.cgi' )->content;
-    sleep 3; # 3 due to Referer header
-    my $third  = $c->get( 'http://dellah.org/time.cgi' )->content;
-
-    is( $second => $third, "Got the same times" );
-
-}
+is( $second => $third, "Second and third match" );
