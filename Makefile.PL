@@ -5,11 +5,11 @@ WriteMakefile(
     VERSION_FROM        => 'Cached.pm',
     ABSTRACT_FROM       => 'Cached.pm',
     PREREQ_PM           => {
-                        'Carp' => 0,
-                        'Cache::Cache' => '1.02',
-                        'Storable' => '2.08',
-                        'WWW::Mechanize' => '0.70',
-                        'Test::More' => '0.47',
-                        },
+        'Carp' => 0,
+        'Cache::Cache' => '1.02',
+        'Storable' => '2.08',
+        'WWW::Mechanize' => '1.00',
+        'Test::More' => '0.47',
+    },
     clean => { FILES => 'WWW-Mechanize-Cached-*' },
 );
