@@ -3,12 +3,16 @@ use warnings FATAL => 'all';
 use lib 't';
 
 use Test::More;
-use WWW::Mechanize::Cached;
-use Test::Warn;
 
-eval "use Test::Warn";
-plan skip_all => "Test::Warn required for testing invalid cache parms" if $@;
-plan tests=>2;
+BEGIN {
+    eval "use Test::Warn";
+    plan skip_all => "Test::Warn required for testing invalid cache parms" if $@;
+    plan tests => 3;
+}
+
+BEGIN {
+    use_ok( 'WWW::Mechanize::Cached' );
+}
 
 my $mech;
 

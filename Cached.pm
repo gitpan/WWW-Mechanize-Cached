@@ -9,14 +9,14 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-Version 1.28
+Version 1.30
 
-    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.13 2004/03/14 04:08:40 andy Exp $
+    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.14 2004/03/14 08:52:43 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.28';
+$VERSION = '1.30';
 
 =head1 SYNOPSIS
 
