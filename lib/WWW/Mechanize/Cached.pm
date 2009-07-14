@@ -3,32 +3,32 @@ package WWW::Mechanize::Cached;
 use strict;
 use warnings FATAL => 'all';
 
-=head1 Name
+=head1 NAME
 
 WWW::Mechanize::Cached - Cache response to be polite
 
-=head1 Version
+=head1 VERSION
 
-Version 1.32
-
-    $Header: /home/cvs/www-mechanize-cached/Cached.pm,v 1.18 2004/04/12 03:21:25 andy Exp $
+Version 1.33
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.32';
+$VERSION = '1.33';
 
-=head1 Synopsis
+=head1 SYNOPSIS
 
     use WWW::Mechanize::Cached;
 
     my $cacher = WWW::Mechanize::Cached->new;
     $cacher->get( $url );
 
-=head1 Description
+=head1 DESCRIPTION
 
 Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This
 lets one perform repeated requests without hammering a server impolitely.
+
+Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
 
 =cut
 
@@ -38,7 +38,7 @@ use Storable qw( freeze thaw );
 
 my $cache_key = __PACKAGE__;
 
-=head1 Constructor
+=head1 CONSTRUCTOR
 
 =head2 new
 
@@ -85,7 +85,7 @@ sub new {
     return $self;
 }
 
-=head1 Methods
+=head1 METHODS
 
 Most methods are provided by L<WWW::Mechanize>. See that module's
 documentation for details.
@@ -115,6 +115,11 @@ sub _make_request {
         $self->{_is_cached} = 1;
     } else {
         $response = $self->SUPER::_make_request( $request, @_ );
+        
+        # http://rt.cpan.org/Public/Bug/Display.html?id=42693
+        $response->decode();
+        delete $response->{handlers};
+        
         $cache->set( $req, freeze($response) );
         $self->{_is_cached} = 0;
     }
@@ -127,11 +132,11 @@ sub _make_request {
 
 
 
-=head1 Thanks
+=head1 THANKS
 
 Iain Truskett for writing this in the first place.
 
-=head1 Oddities
+=head1 BUGS AND LIMITATIONS
 
 It may sometimes seem as if it's not caching something. And this
 may well be true. It uses the HTTP request, in string form, as the key
@@ -139,18 +144,36 @@ to the cache entries, so any minor changes will result in a different
 key. This is most noticable when following links as L<WWW::Mechanize>
 adds a C<Referer> header.
 
-=head1 Bugs, Requests, Comments
+=head1 SUPPORT
 
-Support for this module is provided via the CPAN RT system:
+You can find documentation for this module with the perldoc command.
 
-    http://rt.cpan.org/NoAuth/ReportBug.html?Queue=WWW-Mechanize-Cached
+    perldoc WWW::Mechanize::Cached
 
-    bug-www-mechanize-cached@rt.cpan.org
+You can also look for information at:
 
-This makes it much easier for me to track things and thus means
-your problem is less likely to be neglected.
+=over 4
 
-=head1 Licence and copyright
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/WWW-Mechanize-Cached>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
+
+=back
+
+
+=head1 LICENSE AND COPYRIGHT
 
 This module is copyright Iain Truskett and Andy Lester, 2004. All rights
 reserved.
@@ -163,15 +186,18 @@ The full text of the licences can be found in the F<Artistic> and
 F<COPYING> files included with this module, or in L<perlartistic> and
 L<perlgpl> as supplied with Perl 5.8.1 and later.
 
-=head1 Author
+=head1 AUTHOR
 
-Iain Truskett <spoon@cpan.org>, currently maintained by Andy Lester
-<petdance@cpan.org>
+Iain Truskett <spoon@cpan.org>
 
-=head1 See also
+Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
 
-L<perl>, L<WWW::Mechanize>.
+Currently maintained by Olaf Alders <olaf@wundercounter.com>
+
+=head1 SEE ALSO
+
+L<WWW::Mechanize>.
 
 =cut
 
-"We miss you, Spoon";
+"We miss you, Spoon"; ## no critic
