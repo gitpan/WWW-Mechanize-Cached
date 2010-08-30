@@ -1,17 +1,70 @@
-use ExtUtils::MakeMaker;
-WriteMakefile(
-    NAME                => 'WWW::Mechanize::Cached',
-    AUTHOR              => 'Olaf Alders <olaf@wundercounter.com>',
-    VERSION_FROM        => 'lib/WWW/Mechanize/Cached.pm',
-    ABSTRACT_FROM       => 'lib/WWW/Mechanize/Cached.pm',
-    PREREQ_PM           => {
-        'Carp'              => 0,
-        'Cache::Cache'      => '1.02',
-        'HTTP::Headers'     => '5.827',
-        'Storable'          => '2.08',
-        'Test::More'        => '0.47',
-        'Test::Warn'        => '0.11',
-        'WWW::Mechanize'    => '1.00',
-    },
-    clean => { FILES => 'WWW-Mechanize-Cached-*' },
+
+use strict;
+use warnings;
+
+
+
+use ExtUtils::MakeMaker 6.31;
+
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Cache response to be polite',
+  'AUTHOR' => 'Olaf Alders <olaf@wundercounter.com> (current maintainer)',
+  'BUILD_REQUIRES' => {
+    'Devel::SimpleTrace' => '0',
+    'English' => '0',
+    'File::Spec' => '0',
+    'Find::Lib' => '0',
+    'HTTP::Request' => '0',
+    'Module::Build' => '0.3601',
+    'Path::Class' => '0',
+    'Test::More' => '0',
+    'Test::Perl::Critic' => '0',
+    'TestCache' => '0',
+    'constant' => '0',
+    'vars' => '0'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31',
+    'Module::Build' => '0.3601'
+  },
+  'DISTNAME' => 'WWW-Mechanize-Cached',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'WWW::Mechanize::Cached',
+  'PREREQ_PM' => {
+    'Cache::FileCache' => '0',
+    'Carp' => '0',
+    'Data::Dump' => '0',
+    'Moose' => '0',
+    'Storable' => '0',
+    'WWW::Mechanize' => '0'
+  },
+  'VERSION' => '1.36',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
 );
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
+
