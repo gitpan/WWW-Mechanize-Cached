@@ -37,4 +37,3 @@ t/pages/9.html
 t/perlcriticrc
 t/release-pod-coverage.t
 t/release-pod-syntax.t
-www-mechanize-cached.kpf

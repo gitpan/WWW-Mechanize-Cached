@@ -21,7 +21,6 @@ my %WriteMakefileArgs = (
     'Path::Class' => '0',
     'Test::More' => '0',
     'Test::Perl::Critic' => '0',
-    'TestCache' => '0',
     'constant' => '0',
     'vars' => '0'
   },
@@ -41,7 +40,7 @@ my %WriteMakefileArgs = (
     'Storable' => '0',
     'WWW::Mechanize' => '0'
   },
-  'VERSION' => '1.36',
+  'VERSION' => '1.37',
   'test' => {
     'TESTS' => 't/*.t'
   }

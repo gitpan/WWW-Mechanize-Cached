@@ -12,7 +12,6 @@ build_requires:
   Path::Class: 0
   Test::More: 0
   Test::Perl::Critic: 0
-  TestCache: 0
   constant: 0
   vars: 0
 configure_requires:
@@ -35,4 +34,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached
   repository: http://github.com/oalders/www-mechanize-cached
-version: 1.36
+version: 1.37
