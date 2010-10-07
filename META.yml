@@ -1,6 +1,8 @@
 ---
 abstract: 'Cache response to be polite'
 author:
+  - 'Iain Truskett (original author)'
+  - 'Andy Lester <petdance@cpan.org> (2004 - July 2009)'
   - 'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
 build_requires:
   Devel::SimpleTrace: 0
@@ -11,14 +13,13 @@ build_requires:
   Module::Build: 0.3601
   Path::Class: 0
   Test::More: 0
-  Test::Perl::Critic: 0
   constant: 0
   vars: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.31
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.102341, CPAN::Meta::Converter version 2.102400'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -34,4 +35,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached
   repository: http://github.com/oalders/www-mechanize-cached
-version: 1.37
+version: 1.38

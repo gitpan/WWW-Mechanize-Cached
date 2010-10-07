@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker 6.31;
 
 my %WriteMakefileArgs = (
   'ABSTRACT' => 'Cache response to be polite',
-  'AUTHOR' => 'Olaf Alders <olaf@wundercounter.com> (current maintainer)',
+  'AUTHOR' => 'Iain Truskett (original author), Andy Lester <petdance@cpan.org> (2004 - July 2009), Olaf Alders <olaf@wundercounter.com> (current maintainer)',
   'BUILD_REQUIRES' => {
     'Devel::SimpleTrace' => '0',
     'English' => '0',
@@ -20,7 +20,6 @@ my %WriteMakefileArgs = (
     'Module::Build' => '0.3601',
     'Path::Class' => '0',
     'Test::More' => '0',
-    'Test::Perl::Critic' => '0',
     'constant' => '0',
     'vars' => '0'
   },
@@ -40,7 +39,7 @@ my %WriteMakefileArgs = (
     'Storable' => '0',
     'WWW::Mechanize' => '0'
   },
-  'VERSION' => '1.37',
+  'VERSION' => '1.38',
   'test' => {
     'TESTS' => 't/*.t'
   }

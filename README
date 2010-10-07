@@ -2,7 +2,7 @@ NAME
     WWW::Mechanize::Cached - Cache response to be polite
 
 VERSION
-    version 1.37
+    version 1.38
 
 SYNOPSIS
         use WWW::Mechanize::Cached;
@@ -132,16 +132,15 @@ SUPPORT
 
         <http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
-PAST AUTHORS
-    Iain Truskett <spoon@cpan.org>
-
-    Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-
 SEE ALSO
     WWW::Mechanize.
 
-AUTHOR
-    Olaf Alders <olaf@wundercounter.com> (current maintainer)
+AUTHORS
+    *   Iain Truskett (original author)
+
+    *   Andy Lester <petdance@cpan.org> (2004 - July 2009)
+
+    *   Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2010 by Iain Truskett and Andy Lester.

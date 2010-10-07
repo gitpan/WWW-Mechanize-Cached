@@ -15,7 +15,6 @@ my %module_build_args = (
     'Module::Build' => '0.3601',
     'Path::Class' => '0',
     'Test::More' => '0',
-    'Test::Perl::Critic' => '0',
     'constant' => '0',
     'vars' => '0'
   },
@@ -25,10 +24,12 @@ my %module_build_args = (
   },
   'dist_abstract' => 'Cache response to be polite',
   'dist_author' => [
+    'Iain Truskett (original author)',
+    'Andy Lester <petdance@cpan.org> (2004 - July 2009)',
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'WWW-Mechanize-Cached',
-  'dist_version' => '1.37',
+  'dist_version' => '1.38',
   'license' => 'perl',
   'module_name' => 'WWW::Mechanize::Cached',
   'recommends' => {},

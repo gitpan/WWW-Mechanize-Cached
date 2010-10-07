@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 BEGIN {
-  $WWW::Mechanize::Cached::VERSION = '1.37';
+  $WWW::Mechanize::Cached::VERSION = '1.38';
 }
 
 use Moose;
@@ -144,7 +144,7 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-version 1.37
+version 1.38
 
 =head1 SYNOPSIS
 
@@ -287,19 +287,27 @@ L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
 
 =back
 
-=head1 PAST AUTHORS
-
-Iain Truskett <spoon@cpan.org>
-
-Maintained from 2004 - July 2009 by Andy Lester <petdance@cpan.org>
-
 =head1 SEE ALSO
 
 L<WWW::Mechanize>.
 
-=head1 AUTHOR
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Iain Truskett (original author)
+
+=item *
+
+Andy Lester <petdance@cpan.org> (2004 - July 2009)
+
+=item *
 
 Olaf Alders <olaf@wundercounter.com> (current maintainer)
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
