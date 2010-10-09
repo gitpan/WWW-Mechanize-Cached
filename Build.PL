@@ -29,7 +29,7 @@ my %module_build_args = (
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'WWW-Mechanize-Cached',
-  'dist_version' => '1.38',
+  'dist_version' => '1.39',
   'license' => 'perl',
   'module_name' => 'WWW::Mechanize::Cached',
   'recommends' => {},
@@ -39,7 +39,7 @@ my %module_build_args = (
     'Carp' => '0',
     'Data::Dump' => '0',
     'Moose' => '0',
-    'Storable' => '0',
+    'Storable' => '2.21',
     'WWW::Mechanize' => '0'
   },
   'script_files' => []

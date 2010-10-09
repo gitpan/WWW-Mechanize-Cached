@@ -36,10 +36,10 @@ my %WriteMakefileArgs = (
     'Carp' => '0',
     'Data::Dump' => '0',
     'Moose' => '0',
-    'Storable' => '0',
+    'Storable' => '2.21',
     'WWW::Mechanize' => '0'
   },
-  'VERSION' => '1.38',
+  'VERSION' => '1.39',
   'test' => {
     'TESTS' => 't/*.t'
   }
