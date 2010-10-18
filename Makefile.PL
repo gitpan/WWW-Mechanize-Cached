@@ -39,7 +39,7 @@ my %WriteMakefileArgs = (
     'Storable' => '2.21',
     'WWW::Mechanize' => '0'
   },
-  'VERSION' => '1.39',
+  'VERSION' => '1.40',
   'test' => {
     'TESTS' => 't/*.t'
   }

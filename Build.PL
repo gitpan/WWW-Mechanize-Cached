@@ -29,7 +29,7 @@ my %module_build_args = (
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'WWW-Mechanize-Cached',
-  'dist_version' => '1.39',
+  'dist_version' => '1.40',
   'license' => 'perl',
   'module_name' => 'WWW::Mechanize::Cached',
   'recommends' => {},

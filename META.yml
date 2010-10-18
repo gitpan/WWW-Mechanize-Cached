@@ -36,4 +36,4 @@ resources:
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=WWW-Mechanize-Cached
   homepage: http://github.com/oalders/www-mechanize-cached/tree
   repository: git://github.com/oalders/www-mechanize-cached.git
-version: 1.39
+version: 1.40
