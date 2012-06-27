@@ -5,7 +5,7 @@ INSTALL
 LICENSE
 MANIFEST
 MANIFEST.SKIP
-META.yml
+META.json
 Makefile.PL
 README
 dist.ini
@@ -34,3 +34,4 @@ t/pages/7.html
 t/pages/8.html
 t/pages/9.html
 t/perlcriticrc
+t/release-pod-coverage.t

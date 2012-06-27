@@ -6,43 +6,45 @@ use Module::Build 0.3601;
 
 
 my %module_build_args = (
-  'build_requires' => {
-    'Devel::SimpleTrace' => '0',
-    'English' => '0',
-    'File::Spec' => '0',
-    'Find::Lib' => '0',
-    'HTTP::Request' => '0',
-    'Module::Build' => '0.3601',
-    'Path::Class' => '0',
-    'Test::More' => '0',
-    'constant' => '0',
-    'vars' => '0'
+  "build_requires" => {
+    "Devel::SimpleTrace" => 0,
+    "English" => 0,
+    "File::Spec" => 0,
+    "Find::Lib" => 0,
+    "HTTP::Request" => 0,
+    "Module::Build" => "0.3601",
+    "Path::Class" => 0,
+    "Test::More" => 0,
+    "constant" => 0,
+    "vars" => 0
   },
-  'configure_requires' => {
-    'ExtUtils::MakeMaker' => '6.31',
-    'Module::Build' => '0.3601'
+  "configure_requires" => {
+    "ExtUtils::MakeMaker" => "6.30",
+    "Module::Build" => "0.3601"
   },
-  'dist_abstract' => 'Cache response to be polite',
-  'dist_author' => [
-    'Iain Truskett (original author)',
-    'Andy Lester <petdance@cpan.org> (2004 - July 2009)',
-    'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
+  "dist_abstract" => "Cache response to be polite",
+  "dist_author" => [
+    "Iain Truskett (original author)",
+    "Andy Lester <petdance\@cpan.org> (2004 - July 2009)",
+    "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
-  'dist_name' => 'WWW-Mechanize-Cached',
-  'dist_version' => '1.40',
-  'license' => 'perl',
-  'module_name' => 'WWW::Mechanize::Cached',
-  'recommends' => {},
-  'recursive_test_files' => 1,
-  'requires' => {
-    'Cache::FileCache' => '0',
-    'Carp' => '0',
-    'Data::Dump' => '0',
-    'Moose' => '0',
-    'Storable' => '2.21',
-    'WWW::Mechanize' => '0'
+  "dist_name" => "WWW-Mechanize-Cached",
+  "dist_version" => "1.41",
+  "license" => "perl",
+  "module_name" => "WWW::Mechanize::Cached",
+  "recommends" => {},
+  "recursive_test_files" => 1,
+  "requires" => {
+    "Cache::FileCache" => 0,
+    "Carp" => 0,
+    "Data::Dump" => 0,
+    "Moose" => 0,
+    "Storable" => "2.21",
+    "WWW::Mechanize" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
-  'script_files' => []
+  "script_files" => []
 );
 
 

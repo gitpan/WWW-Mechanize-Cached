@@ -1,0 +1,70 @@
+{
+   "abstract" : "Cache response to be polite",
+   "author" : [
+      "Iain Truskett (original author)",
+      "Andy Lester <petdance@cpan.org> (2004 - July 2009)",
+      "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300010, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "WWW-Mechanize-Cached",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30",
+            "Module::Build" : "0.3601"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Cache::FileCache" : "0",
+            "Carp" : "0",
+            "Data::Dump" : "0",
+            "Moose" : "0",
+            "Storable" : "2.21",
+            "WWW::Mechanize" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Devel::SimpleTrace" : "0",
+            "English" : "0",
+            "File::Spec" : "0",
+            "Find::Lib" : "0",
+            "HTTP::Request" : "0",
+            "Path::Class" : "0",
+            "Test::More" : "0",
+            "constant" : "0",
+            "vars" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://github.com/oalders/www-mechanize-cached/issues"
+      },
+      "homepage" : "https://github.com/oalders/www-mechanize-cached",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/oalders/www-mechanize-cached.git",
+         "web" : "https://github.com/oalders/www-mechanize-cached"
+      }
+   },
+   "version" : "1.41"
+}
+

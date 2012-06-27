@@ -2,8 +2,8 @@ use strict;
 use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
-BEGIN {
-  $WWW::Mechanize::Cached::VERSION = '1.40';
+{
+  $WWW::Mechanize::Cached::VERSION = '1.41';
 }
 
 use Moose;
@@ -12,10 +12,14 @@ use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
 
-has 'cache'            => ( is => 'rw', );
-has 'is_cached'        => ( is => 'rw', );
-has 'positive_cache'   => ( is => 'rw', );
-has 'ref_in_cache_key' => ( is => 'rw', );
+has 'cache'                         => ( is => 'rw', );
+has 'is_cached'                     => ( is => 'rw', );
+has 'positive_cache'                => ( is => 'rw', );
+has 'ref_in_cache_key'              => ( is => 'rw', );
+has 'cache_undef_content_length'    => ( is => 'rw', );
+has 'cache_zero_content_length'     => ( is => 'rw', );
+has 'cache_mismatch_content_length' => ( is => 'rw', );
+has '_verbose_dwarn'                => ( is => 'rw', );
 
 sub new {
     my $class     = shift;
@@ -23,7 +27,7 @@ sub new {
 
     my $cache = delete $mech_args{cache};
     if ( $cache ) {
-        my $ok 
+        my $ok
             = ( ref( $cache ) ne "HASH" )
             && $cache->can( "get" )
             && $cache->can( "set" );
@@ -34,9 +38,19 @@ sub new {
     }
 
     my %cached_args = %mech_args;
-    
-    delete $mech_args{ref_in_cache_key};
-    delete $mech_args{positive_cache};
+
+    my %defaults = (
+        ref_in_cache_key              => 0,
+        positive_cache                => 1,
+        cache_undef_content_length    => 0,
+        cache_zero_content_length     => 0,
+        cache_mismatch_content_length => 'warn',
+        _verbose_dwarn                => 0,
+    );
+
+    for my $key ( keys %defaults ) {
+        delete $mech_args{$key};
+    }
 
     my $self = $class->SUPER::new( %mech_args );
 
@@ -50,13 +64,9 @@ sub new {
     }
 
     $self->cache( $cache );
-    
-    my %defaults = (
-        ref_in_cache_key => 0,
-        positive_cache => 1,
-    );
-    
-    foreach my $arg ('ref_in_cache_key', 'positive_cache' ) {
+
+
+    foreach my $arg ( keys %defaults ) {
         if ( exists $cached_args{$arg} ) {
             $self->$arg( $cached_args{$arg} );
         }
@@ -70,7 +80,7 @@ sub new {
 }
 
 sub _make_request {
-    
+
     my $self    = shift;
     my $request = shift;
     my $req     = $request;
@@ -89,10 +99,10 @@ sub _make_request {
     }
 
     my $response = $self->cache->get( $req );
+
     if ( $response ) {
         $response = thaw( $response );
     }
-
     if ( $self->_cache_ok( $response ) ) {
         $self->is_cached( 1 );
         return $response;
@@ -100,15 +110,109 @@ sub _make_request {
 
     $response = $self->SUPER::_make_request( $request, @_ );
 
+    # decode strips some important headers.
+    my $headers = $response->headers->clone;
+
+    my $should_cache = $self->_response_cache_ok( $response, $headers );
+
     # http://rt.cpan.org/Public/Bug/Display.html?id=42693
     $response->decode();
     delete $response->{handlers};
 
-    if ( $self->_cache_ok( $response ) ) {
-        $self->cache->set( $req, freeze( $response ) );
-    }
+    $self->cache->set( $req, freeze( $response ) ) if $should_cache;
 
     return $response;
+}
+
+sub _dwarn_filter {
+    my ( $ctx, $ref ) = @_;
+    return {
+        hide_keys => [
+            qw( _content cookie content set-cookie handlers cookie_jar cache req res page_stack )
+        ]
+    };
+
+}
+
+sub _dwarn {
+    my $self    = shift;
+    my $message = shift;
+
+    return unless my $handler = $self->{onwarn};
+
+    return if $self->quiet;
+
+    if ( $self->_verbose_dwarn ) {
+        my $payload = {
+            self    => $self,
+            message => $message,
+            debug   => \@_,
+        };
+        require Data::Dump;
+        return $handler->( Data::Dump::dumpf( $payload, \&_dwarn_filter ) );
+    }
+    else {
+        return $handler->($message);
+    }
+}
+
+sub _response_cache_ok {
+    my $self     = shift;
+    my $response = shift;
+    my $headers  = shift;
+
+    return 0 if !$response;
+    return 1 if !$self->positive_cache;
+
+    return 0 if $response->code < 200;
+    return 0 if $response->code > 301;
+
+    my $size = $headers->{'content-length'};
+
+    if ( not defined $size ) {
+        if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
+            $self->_dwarn(
+                q[Content-Length header was undefined, not caching]
+                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                $headers
+            );
+            return 0;
+        }
+        if ( $self->cache_undef_content_length == 0 ) {
+            return 0;
+        }
+    }
+
+    if ( defined $size and $size == 0 ) {
+        if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
+            $self->_dwarn(
+                q{Content-Length header was 0, not caching}
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                $headers
+            );
+            return 0;
+        }
+        if ( $self->cache_zero_content_length == 0 ) {
+            return 0;
+        }
+    }
+
+    if (    defined $size
+        and $size != 0
+        and $size != length( $response->content ) )
+    {
+        if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
+            $self->_dwarn(
+q{Content-Length header did not match contents actual length, not caching}
+                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+            return 0;
+        }
+        if ( $self->cache_mismatch_content_length == 0 ) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 sub _cache_ok {
@@ -119,13 +223,10 @@ sub _cache_ok {
     return 0 if !$response;
     return 1 if !$self->positive_cache;
 
-    if ( ( $response->code >= 200 && $response->code < 300 )
-        || $response->code == 301 )
-    {
-        return 1;
-    }
-    return 0;
+    return 0 if $response->code < 200;
+    return 0 if $response->code > 301;
 
+    return 1;
 }
 
 __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
@@ -144,7 +245,7 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-version 1.40
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -156,21 +257,23 @@ version 1.40
     # or, with your own Cache object
     use CHI;
     use WWW::Mechanize::Cached;
-    
+
     my $cache = CHI->new(
         driver   => 'File',
         root_dir => '/tmp/mech-example'
     );
-    
+
     my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-    $mech->get("http://www.google.com");
+    $mech->get("http://www.wikipedia.org");
 
 =head1 DESCRIPTION
 
-Uses the L<Cache::Cache> hierarchy to implement a caching Mech. This lets one
-perform repeated requests without hammering a server impolitely.
-
-Repository: L<http://github.com/oalders/www-mechanize-cached/tree/master>
+Uses the L<Cache::Cache> hierarchy by default to implement a caching Mech. This
+lets one perform repeated requests without hammering a server impolitely.
+Please note that L<Cache::Cache> has been superceded by L<CHI>, but the default
+has not been changed here for reasons of backwards compatibility.  For this
+reason, you are encouraged to provide your own L<CHI> caching object to
+override the default.
 
 =head1 CONSTRUCTOR
 
@@ -189,27 +292,27 @@ The default Cache object is set up with the following params:
     my $cache_params = {
         default_expires_in => "1d", namespace => 'www-mechanize-cached',
     };
-    
+
     $cache = Cache::FileCache->new( $cache_params );
 
 This should be fine if you only want to use a disk-based cache, you only want
 to cache results for 1 day and you're not in a shared hosting environment.
 If any of this presents a problem for you, you should pass in your own Cache
 object.  These defaults will remain unchanged in order to maintain backwards
-compatibility.  
+compatibility.
 
 For example, you may want to try something like this:
 
     use WWW::Mechanize::Cached;
     use CHI;
-    
+
     my $cache = CHI->new(
         driver   => 'File',
         root_dir => '/tmp/mech-example'
     );
-    
+
     my $mech = WWW::Mechanize::Cached->new( cache => $cache );
-    $mech->get("http://www.google.com");
+    $mech->get("http://www.wikipedia.org");
 
 =head1 METHODS
 
@@ -242,7 +345,7 @@ negative cache quite easily:
 Allow the referring URL to be used when creating the cache key.  This is off
 by default.  In almost all cases, you will not want to enable this, but it is
 available to you for reasons of backwards compatibility and giving you enough
-rope to hang yourself.  
+rope to hang yourself.
 
 Previous to v1.36 the following was in the "BUGS AND LIMITATIONS" section:
 
@@ -255,9 +358,64 @@ Previous to v1.36 the following was in the "BUGS AND LIMITATIONS" section:
 See RT #56757 for a detailed example of the bugs this functionality can
 trigger.
 
+=head2 cache_undef_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header is not specified by the server.
+
+Default behaviour is 0, which is not to cache.
+
+Setting this value to 1, will cache pages even if the Content-Length header is
+missing, which was the default behaviour prior to the addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it.
+
+=head2 cache_zero_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header is equal to 0.
+
+Default behaviour is 0, which is not to cache.
+
+Setting this value to 1, will cache pages even if the Content-Length header is
+0, which was the default behaviour prior to the addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it.
+
+=head2 cache_mismatch_content_length( 0 | 'warn' | 1 )
+
+This is configuration option which adjusts how caching behaviour performs when
+the Content-Length header differs from the length of the content itself. ( Which
+usually indicates a transmission error )
+
+Setting this value to 0, will silenly not cache pages with a Content-Length
+mismatch.
+
+Setting this value to 1, will cache pages even if the Content-Length header
+conflicts with the content length, which was the default behaviour prior to the
+addition of this feature.
+
+And thirdly, you can set the value to the string 'warn', to warn if this
+scenario occurs, and then not cache it. ( This is the default behaviour )
+
+=head1 UPGRADING FROM 1.40 OR EARLIER
+
+Caching behaviour has changed since 1.40, and this may result in pages that were
+previously cached start failing to cache, and in some cases, emit warnings.
+
+To return to the 1.40 behaviour:
+
+	$mech->cache_undef_content_length(1);  # Default is 0
+	$mech->cache_zero_content_length(1);   # Default is 0
+	$mech->cache_mismatch_content_length(1); # Default is 'warn'
+
 =head1 THANKS
 
 Iain Truskett for writing this in the first place.
+Andy Lester for graciously handing over maintainership.
+Kent Fredric for adding content length handling.
 
 =head1 SUPPORT
 
@@ -265,31 +423,17 @@ You can find documentation for this module with the perldoc command.
 
     perldoc WWW::Mechanize::Cached
 
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/WWW-Mechanize-Cached>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/WWW-Mechanize-Cached>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mechanize-Cached>
+=over
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/WWW-Mechanize-Cached>
+L<https://metacpan.org/module/WWW::Mechanize::Cached>
 
 =back
 
 =head1 SEE ALSO
 
-L<WWW::Mechanize>.
+L<WWW::Mechanize>, L<WWW::Mechanize::Cached::GZip>.
 
 =head1 AUTHORS
 
@@ -311,7 +455,7 @@ Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Iain Truskett and Andy Lester.
+This software is copyright (c) 2012 by Iain Truskett and Andy Lester.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
