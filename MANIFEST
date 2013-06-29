@@ -1,5 +1,6 @@
 AUTHORS
 Build.PL
+CONTRIBUTORS
 Changes
 INSTALL
 LICENSE
@@ -16,8 +17,6 @@ t/002-bad-custom-cache.t
 t/003-basic.t
 t/004-cached.t
 t/005-custom-cache.t
-t/006-pod-coverage.t
-t/007-pod.t
 t/TestCache.pm
 t/author-critic.t
 t/cache_key.t
@@ -33,5 +32,4 @@ t/pages/6.html
 t/pages/7.html
 t/pages/8.html
 t/pages/9.html
-t/perlcriticrc
 t/release-pod-coverage.t

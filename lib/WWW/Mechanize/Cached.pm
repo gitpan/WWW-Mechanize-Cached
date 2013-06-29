@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 {
-  $WWW::Mechanize::Cached::VERSION = '1.41';
+  $WWW::Mechanize::Cached::VERSION = '1.42';
 }
 
 use Moose;
@@ -64,7 +64,6 @@ sub new {
     }
 
     $self->cache( $cache );
-
 
     foreach my $arg ( keys %defaults ) {
         if ( exists $cached_args{$arg} ) {
@@ -152,7 +151,7 @@ sub _dwarn {
         return $handler->( Data::Dump::dumpf( $payload, \&_dwarn_filter ) );
     }
     else {
-        return $handler->($message);
+        return $handler->( $message );
     }
 }
 
@@ -167,13 +166,26 @@ sub _response_cache_ok {
     return 0 if $response->code < 200;
     return 0 if $response->code > 301;
 
+    if ( exists $headers->{'client-transfer-encoding'} ) {
+        for my $cte ( @{ $headers->{'client-transfer-encoding'} } ) {
+
+            # Transfer-Encoding = chunked means document consistency
+            # is independent of Content-Length value,
+            # and that Content-Length can be safely ignored.
+            # Its not obvious how the lower levels represent a
+            # failed chuncked-transfer yet.
+            # But its safe to say relying on content-length proves pointless.
+            return 1 if $cte eq 'chunked';
+        }
+    }
+
     my $size = $headers->{'content-length'};
 
     if ( not defined $size ) {
         if ( $self->cache_undef_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q[Content-Length header was undefined, not caching]
-                  . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
+                    . q[ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSING)],
                 $headers
             );
             return 0;
@@ -187,7 +199,7 @@ sub _response_cache_ok {
         if ( $self->cache_zero_content_length . q{} eq q{warn} ) {
             $self->_dwarn(
                 q{Content-Length header was 0, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_ZERO)},
                 $headers
             );
             return 0;
@@ -203,8 +215,8 @@ sub _response_cache_ok {
     {
         if ( $self->cache_mismatch_content_length . "" eq "warn" ) {
             $self->_dwarn(
-q{Content-Length header did not match contents actual length, not caching}
-                  . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
+                q{Content-Length header did not match contents actual length, not caching}
+                    . q{ (E=WWW_MECH_CACHED_CONTENTLENGTH_MISSMATCH)} );
             return 0;
         }
         if ( $self->cache_mismatch_content_length == 0 ) {
@@ -235,8 +247,8 @@ __PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 # ABSTRACT: Cache response to be polite
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -245,7 +257,7 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
@@ -455,10 +467,9 @@ Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Iain Truskett and Andy Lester.
+This software is copyright (c) 2013 by Iain Truskett and Andy Lester.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
