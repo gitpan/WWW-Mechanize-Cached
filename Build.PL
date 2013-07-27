@@ -20,7 +20,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "WWW-Mechanize-Cached",
-  "dist_version" => "1.42",
+  "dist_version" => "1.43",
   "license" => "perl",
   "module_name" => "WWW::Mechanize::Cached",
   "recommends" => {},
@@ -44,6 +44,7 @@ my %module_build_args = (
     "Path::Class" => 0,
     "Test::More" => 0,
     "constant" => 0,
+    "lib" => 0,
     "vars" => 0
   }
 );

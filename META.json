@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300034, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -30,6 +30,7 @@
       "develop" : {
          "requires" : {
             "Pod::Coverage::TrustPod" : "0",
+            "Test::CPAN::Changes" : "0.19",
             "Test::Pod::Coverage" : "1.08"
          }
       },
@@ -54,6 +55,7 @@
             "Path::Class" : "0",
             "Test::More" : "0",
             "constant" : "0",
+            "lib" : "0",
             "vars" : "0"
          }
       }
@@ -70,9 +72,10 @@
          "web" : "https://github.com/oalders/www-mechanize-cached"
       }
    },
-   "version" : "1.42",
+   "version" : "1.43",
    "x_contributors" : [
       "Kent Fredric <kentfredric@gmail.com>",
+      "Neil Bowers <neil@bowers.com>",
       "Olaf Alders <olaf@wundersolutions.com>"
    ]
 }

@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
 {
-  $WWW::Mechanize::Cached::VERSION = '1.42';
+  $WWW::Mechanize::Cached::VERSION = '1.43';
 }
 
 use Moose;
@@ -257,7 +257,7 @@ WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-version 1.42
+version 1.43
 
 =head1 SYNOPSIS
 

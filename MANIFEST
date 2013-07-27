@@ -32,4 +32,5 @@ t/pages/6.html
 t/pages/7.html
 t/pages/8.html
 t/pages/9.html
+t/release-cpan-changes.t
 t/release-pod-coverage.t

@@ -40,9 +40,10 @@ my %WriteMakefileArgs = (
     "Path::Class" => 0,
     "Test::More" => 0,
     "constant" => 0,
+    "lib" => 0,
     "vars" => 0
   },
-  "VERSION" => "1.42",
+  "VERSION" => "1.43",
   "test" => {
     "TESTS" => "t/*.t"
   }
