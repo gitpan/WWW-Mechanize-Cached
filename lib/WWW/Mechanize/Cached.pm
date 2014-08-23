@@ -2,12 +2,12 @@ use strict;
 use warnings FATAL => 'all';
 
 package WWW::Mechanize::Cached;
-{
-  $WWW::Mechanize::Cached::VERSION = '1.43';
-}
+$WWW::Mechanize::Cached::VERSION = '1.44';
+use 5.006;
 
 use Moose;
 extends 'WWW::Mechanize';
+
 use Carp qw( carp croak );
 use Data::Dump qw( dump );
 use Storable qw( freeze thaw );
@@ -55,12 +55,25 @@ sub new {
     my $self = $class->SUPER::new( %mech_args );
 
     if ( !$cache ) {
-        require Cache::FileCache;
-        my $cache_params = {
-            default_expires_in => "1d",
-            namespace          => 'www-mechanize-cached',
-        };
-        $cache = Cache::FileCache->new( $cache_params );
+        local $@;
+        if ( eval { require Cache::FileCache; 1 } ) {
+          my $cache_params = {
+              default_expires_in => "1d",
+              namespace          => 'www-mechanize-cached',
+          };
+          $cache = Cache::FileCache->new( $cache_params );
+        } elsif ( eval { require CHI; 1 } ) {
+          my $cache_params = {
+            driver => 'File',
+            expires_in => '1d',
+            namespace => 'www-mechanize-cached',
+          };
+          $cache = CHI->new( %$cache_params );
+        } else {
+          croak("Could not create a default cache." .
+            "Please make sure either CHI or Cache::FileCache are installed or configure manually as appropriate"
+          );
+        }
     }
 
     $self->cache( $cache );
@@ -251,13 +264,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 WWW::Mechanize::Cached - Cache response to be polite
 
 =head1 VERSION
 
-version 1.43
+version 1.44
 
 =head1 SYNOPSIS
 
@@ -419,9 +434,9 @@ previously cached start failing to cache, and in some cases, emit warnings.
 
 To return to the 1.40 behaviour:
 
-	$mech->cache_undef_content_length(1);  # Default is 0
-	$mech->cache_zero_content_length(1);   # Default is 0
-	$mech->cache_mismatch_content_length(1); # Default is 'warn'
+    $mech->cache_undef_content_length(1);  # Default is 0
+    $mech->cache_zero_content_length(1);   # Default is 0
+    $mech->cache_mismatch_content_length(1); # Default is 'warn'
 
 =head1 THANKS
 

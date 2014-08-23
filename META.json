@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],
@@ -18,13 +18,13 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Module::Build" : "0.3601"
+            "Module::Build" : "0.28"
          }
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.30",
-            "Module::Build" : "0.3601"
+            "ExtUtils::MakeMaker" : "0",
+            "Module::Build" : "0.28"
          }
       },
       "develop" : {
@@ -36,24 +36,26 @@
       },
       "runtime" : {
          "requires" : {
+            "CHI" : "0",
             "Cache::FileCache" : "0",
             "Carp" : "0",
             "Data::Dump" : "0",
             "Moose" : "0",
             "Storable" : "2.21",
             "WWW::Mechanize" : "0",
+            "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
          }
       },
       "test" : {
          "requires" : {
-            "Devel::SimpleTrace" : "0",
             "File::Spec" : "0",
             "Find::Lib" : "0",
             "HTTP::Request" : "0",
             "Path::Class" : "0",
             "Test::More" : "0",
+            "Test::Requires" : "0",
             "constant" : "0",
             "lib" : "0",
             "vars" : "0"
@@ -72,7 +74,7 @@
          "web" : "https://github.com/oalders/www-mechanize-cached"
       }
    },
-   "version" : "1.43",
+   "version" : "1.44",
    "x_contributors" : [
       "Kent Fredric <kentfredric@gmail.com>",
       "Neil Bowers <neil@bowers.com>",

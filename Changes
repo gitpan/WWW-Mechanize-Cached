@@ -1,5 +1,9 @@
 Revision history for Perl module WWW::Mechanize::Cached
 
+1.44 2014-08-23 11:25:15 America/Toronto
+    - Support working with CHI automatically if Cache::FileCache is not installed
+    - GH #6 (Kent Fredric)
+
 1.43 2013-07-26 23:04:40 America/Toronto
     - Reformatted Changes file as per CPAN::Changes::Spec (Neil Bowers)
 
